@@ -76,7 +76,30 @@ jobs:
       with:
         name: app-jar
         path: target/*.jar 
-        
+    
+    - name: Ensure unzip is installed
+      shell: bash
+      run: |
+        if command -v unzip >/dev/null 2>&1; then
+          echo "unzip already installed."
+          exit 0
+        fi
+        echo "Installing unzip..."
+        if command -v apt-get >/dev/null 2>&1; then
+          sudo apt-get update -y && sudo apt-get install -y unzip
+        elif command -v yum >/dev/null 2>&1; then
+          sudo yum install -y unzip
+        elif command -v dnf >/dev/null 2>&1; then
+          sudo dnf install -y unzip
+        elif command -v apk >/dev/null 2>&1; then
+          sudo apk add --no-cache unzip
+        elif command -v zypper >/dev/null 2>&1; then
+          sudo zypper install -y unzip
+        else
+          echo "::error::Unsupported package manager. Please install unzip manually on the runner."
+          exit 1
+        fi
+  
     - uses: actions/checkout@v4
       with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
