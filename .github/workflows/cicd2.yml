@@ -145,7 +145,20 @@ jobs:
           push: true
           tags: ashish6767chandila/bankapp:latest
           file: ./Dockerfile
-
+  
+  security_scan_bindplane_image:
+    runs-on: self-hosted
+    needs: build_docker_image_and_push
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: observiq/bindplane-agent:latest
+          format: 'table'
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          exit-code: '1'
+ 
   deploy_to_kubernetes:
     runs-on: self-hosted
     needs: build_docker_image_and_push
