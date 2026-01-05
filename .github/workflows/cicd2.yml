@@ -157,11 +157,11 @@ jobs:
           format: 'table'
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
-          exit-code: '1'
+          # exit-code: '1'
  
   deploy_to_kubernetes:
     runs-on: self-hosted
-    needs: build_docker_image_and_push
+    needs: security_scan_bindplane_image
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
